@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+  <title>Jedi Parking</title> 
+  <script src="http://maps.google.com/maps/api/js?sensor=false" 
+          type="text/javascript"></script>
+</head> 
+<body>
+  <div id="map" style="width: 1200px; height: 700px; margin:auto"></div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script type="text/javascript">
+
+    var json = (function () {
+      var json = null;
+      $.ajax({
+        'async': false,
+        'global': false,
+        'url': "https://parking.api.smgov.net/meters",
+        'dataType': "json",
+        'success': function (data) {
+            json = data;
+        }
+      });
+      return json;
+    })(); 
+
+    console.log(json[0]['longitude']);
+
+    for(){
+      
+    }
+
+    var locations = [
+      ['500 BROADWAY', 34.016330, -118.491910],
+      ['1600 MAIN ST', 34.011030, -118.491760],
+      ['1200 23RD ST', 34.033030, -118.480350],
+      ['2401 SANTA MONICA BLVD', 34.032240, -118.475780]
+    ];
+
+    var styles = [{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#e0efef"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"hue":"#1900ff"},{"color":"#c0e8e8"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":700}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#7dcdcd"}]}];
+
+    var styledMap = new google.maps.StyledMapType(styles,
+    {name: "Styled Map"});
+
+    var mapOptions = {
+      zoom: 14,
+      center: new google.maps.LatLng(34.024212, -118.496475),
+      mapTypeControlOptions: {
+        mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+      }
+    };
+
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    map.mapTypes.set('map_style', styledMap);
+    map.setMapTypeId('map_style');
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 7,
+          fillColor: 'orange',
+          strokeColor: 'orange',
+          strokeWeight: 1,
+          fillOpacity: 0.8
+        }
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+  </script>
+</body>
+</html>
