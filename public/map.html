@@ -25,18 +25,18 @@
       return json;
     })(); 
 
-    console.log(json[0]['longitude']);
+    // console.log(json[0]['longitude']);
 
-    for(){
-      
+    var location = [];
+    for(var i=0; i<json.length; i++){
+      var foo=[];
+      foo[0]=json[i]['street_address'];
+      foo[1]=json[i]['latitude'];
+      foo[2]=json[i]['longitude'];
+
+      locations[i] = foo;
+       
     }
-
-    var locations = [
-      ['500 BROADWAY', 34.016330, -118.491910],
-      ['1600 MAIN ST', 34.011030, -118.491760],
-      ['1200 23RD ST', 34.033030, -118.480350],
-      ['2401 SANTA MONICA BLVD', 34.032240, -118.475780]
-    ];
 
     var styles = [{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#e0efef"}]},{"featureType":"poi","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"hue":"#1900ff"},{"color":"#c0e8e8"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":100},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"on"},{"lightness":700}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#7dcdcd"}]}];
 
@@ -65,7 +65,7 @@
         map: map,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          scale: 7,
+          scale: 1,
           fillColor: 'orange',
           strokeColor: 'orange',
           strokeWeight: 1,
