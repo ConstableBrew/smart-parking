@@ -1,17 +1,19 @@
-var request = require('superagent');
+"use strict";
+var request = require('superagent-promise')(require('superagent'), Promise);
 var meters = {};
 
-module.exports = function (req, res, next) {
+module.exports = function (req, res, next){
   res.meters = meters;
   next();
-})
+};
 
 getMetersEvents();
 
-function getMetersEvents() {
+function getMetersEvents(){
+	console.log('Getting meter events...');
   request('GET', 'https://parking.api.smgov.net/meters/events')
   .end()
-  .then( (res) => {
+  .then( res => {
     let events = res.body;
     for(let i=0; i < events.length; ++i) {
       let event = events[i];
@@ -25,11 +27,12 @@ function getMetersEvents() {
       }
     }
   })
-  .catch( (err) => {
+  .catch( err => {
     console.error('Error getting meters/events');
     console.error(err);
   })
   .then( () => {
+  	console.log('Got meters.');
     setTimeout(getMetersEvents, 5 * 60 * 1000);
   });
 }
